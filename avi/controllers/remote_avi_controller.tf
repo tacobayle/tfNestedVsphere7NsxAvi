@@ -9,7 +9,7 @@ data "template_file" "environment_variables" {
 resource "null_resource" "tf_avi_controller" {
 
   connection {
-    host = var.vcenter.dvs.portgroup.management.external_gw_ip
+    host = var.vcenter.vds.portgroup.management.external_gw_ip
     type = "ssh"
     agent = false
     user = var.external_gw.username

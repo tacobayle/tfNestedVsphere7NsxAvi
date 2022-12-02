@@ -22,7 +22,7 @@ data "template_file" "values" {
     ntp = var.ntp.server
     dns = var.dns.nameserver
     nsx_password = var.nsx_password
-    nsx_server = var.vcenter.dvs.portgroup.management.nsx_ip
+    nsx_server = var.vcenter.vds.portgroup.management.nsx_ip
     domain = var.dns.domain
     cloud_name = var.avi.config.cloud.name
     cloud_obj_name_prefix = var.avi.config.cloud.obj_name_prefix
@@ -31,7 +31,7 @@ data "template_file" "values" {
     networks_data = jsonencode(var.avi.config.networks_data)
     sso_domain = var.vcenter.sso.domain_name
     vcenter_password = var.vcenter_password
-    vcenter_ip = var.vcenter.dvs.portgroup.management.vcenter_ip
+    vcenter_ip = var.vcenter.vds.portgroup.management.vcenter_ip
     content_library = var.avi.config.content_library_avi
     service_engine_groups = jsonencode(var.avi.config.service_engine_groups)
     pools = jsonencode(var.avi.config.pools)
@@ -43,7 +43,7 @@ resource "null_resource" "ansible_avi" {
   depends_on = [null_resource.ansible_hosts_avi_controllers, vsphere_content_library.nested_library_avi, vsphere_folder.se_groups_folders]
 
   connection {
-    host = var.vcenter.dvs.portgroup.management.external_gw_ip
+    host = var.vcenter.vds.portgroup.management.external_gw_ip
     type = "ssh"
     agent = false
     user        = var.external_gw.username

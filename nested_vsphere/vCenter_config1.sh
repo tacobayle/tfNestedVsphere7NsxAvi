@@ -70,7 +70,7 @@ curl_put $token '{"name":'\"$(jq -r .ntp.timezone $jsonFile)\"'}' $api_host "app
 #
 IFS=$'\n'
 count=1
-for ip in $(jq -r .vcenter.dvs.portgroup.management.esxi_ips[] $jsonFile)
+for ip in $(jq -r .vcenter.vds.portgroup.management.esxi_ips[] $jsonFile)
 do
   load_govc_env
   if [[ $count -ne 1 ]] ; then
@@ -83,8 +83,8 @@ done
 # Network config
 #
 load_govc_env
-govc dvs.create -mtu $(jq -r .vcenter.dvs.mtu $jsonFile) -discovery-protocol $(jq -r .vcenter.dvs.discovery_protocol $jsonFile) -product-version=$(jq -r .vcenter.dvs.version $jsonFile) "$(jq -r .vcenter.dvs.basename $jsonFile)-0"
-govc dvs.create -mtu $(jq -r .vcenter.dvs.mtu $jsonFile) -discovery-protocol $(jq -r .vcenter.dvs.discovery_protocol $jsonFile) -product-version=$(jq -r .vcenter.dvs.version $jsonFile) "$(jq -r .vcenter.dvs.basename $jsonFile)-1-VMotion"
+govc dvs.create -mtu $(jq -r .vcenter.vds.mtu $jsonFile) -discovery-protocol $(jq -r .vcenter.vds.discovery_protocol $jsonFile) -product-version=$(jq -r .vcenter.vds.version $jsonFile) "$(jq -r .vcenter.vds.basename $jsonFile)-0"
+govc dvs.create -mtu $(jq -r .vcenter.vds.mtu $jsonFile) -discovery-protocol $(jq -r .vcenter.vds.discovery_protocol $jsonFile) -product-version=$(jq -r .vcenter.vds.version $jsonFile) "$(jq -r .vcenter.vds.basename $jsonFile)-1-VMotion"
 govc dvs.create -mtu $(jq -r .vcenter.dvs.mtu $jsonFile) -discovery-protocol $(jq -r .vcenter.dvs.discovery_protocol $jsonFile) -product-version=$(jq -r .vcenter.dvs.version $jsonFile) "$(jq -r .vcenter.dvs.basename $jsonFile)-2-VSAN"
 govc dvs.portgroup.add -dvs "$(jq -r .vcenter.dvs.basename $jsonFile)-0" -vlan 0 "$(jq -r .vcenter.dvs.portgroup.management.name $jsonFile)"
 govc dvs.portgroup.add -dvs "$(jq -r .vcenter.dvs.basename $jsonFile)-0" -vlan 0 "$(jq -r .vcenter.dvs.portgroup.management.name $jsonFile)-vmk"

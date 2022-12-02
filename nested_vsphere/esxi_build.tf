@@ -3,13 +3,13 @@ resource "local_file" "ks_cust_multiple_vswitch" {
   content     = templatefile("${path.module}/templates/ks_cust_multiple_vswitch.cfg.tmpl",
   { esxi_root_password = var.esxi_root_password,
     keyboard_type = var.esxi.keyboard_type,
-    ip_mgmt = var.vcenter.dvs.portgroup.management.esxi_ips[count.index],
-    netmask = var.vcenter.dvs.portgroup.management.netmask,
-    gateway = var.vcenter.dvs.portgroup.management.gateway,
-    ip_vmotion = var.vcenter.dvs.portgroup.VMotion.esxi_ips[count.index],
-    netmask_vmotion = var.vcenter.dvs.portgroup.VMotion.netmask,
-    ip_vsan = var.vcenter.dvs.portgroup.VSAN.esxi_ips[count.index],
-    netmask_vsan = var.vcenter.dvs.portgroup.VSAN.netmask,
+    ip_mgmt = var.vcenter.vds.portgroup.management.esxi_ips[count.index],
+    netmask = var.vcenter.vds.portgroup.management.netmask,
+    gateway = var.vcenter.vds.portgroup.management.gateway,
+    ip_vmotion = var.vcenter.vds.portgroup.VMotion.esxi_ips[count.index],
+    netmask_vmotion = var.vcenter.vds.portgroup.VMotion.netmask,
+    ip_vsan = var.vcenter.vds.portgroup.VSAN.esxi_ips[count.index],
+    netmask_vsan = var.vcenter.vds.portgroup.VSAN.netmask,
     ntp = var.ntp.server,
     nameserver = var.dns.nameserver,
     hostname = "${var.esxi.basename}${count.index + 1}.${var.dns.domain}"
@@ -103,7 +103,7 @@ resource "null_resource" "wait_esxi" {
   count = var.esxi.count
 
   provisioner "local-exec" {
-    command = "count=1 ; until $(curl --output /dev/null --silent --head -k https://${var.vcenter.dvs.portgroup.management.esxi_ips[count.index]}); do echo \"Attempt $count: Waiting for ESXi host ${count.index} to be reachable...\"; sleep 40 ; count=$((count+1)) ;  if [ \"$count\" = 30 ]; then echo \"ERROR: Unable to connect to ESXi host\" ; exit 1 ; fi ; done"
+    command = "count=1 ; until $(curl --output /dev/null --silent --head -k https://${var.vcenter.vds.portgroup.management.esxi_ips[count.index]}); do echo \"Attempt $count: Waiting for ESXi host ${count.index} to be reachable...\"; sleep 40 ; count=$((count+1)) ;  if [ \"$count\" = 30 ]; then echo \"ERROR: Unable to connect to ESXi host\" ; exit 1 ; fi ; done"
   }
 }
 
@@ -124,8 +124,8 @@ resource "null_resource" "vcenter_underlay_clean_up" {
 }
 
 resource "null_resource" "clear_ssh_key_esxi_locally" {
-  count = length(var.vcenter.dvs.portgroup.management.esxi_ips)
+  count = length(var.vcenter.vds.portgroup.management.esxi_ips)
   provisioner "local-exec" {
-    command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R \"${var.vcenter.dvs.portgroup.management.esxi_ips[count.index]}\" || true"
+    command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R \"${var.vcenter.vds.portgroup.management.esxi_ips[count.index]}\" || true"
   }
 }

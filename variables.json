@@ -332,7 +332,7 @@
               "segment_name": "segment-external",
               "type" : "EXTERNAL",
               "display_name" : "if-ext-0",
-              "description": "this will consume IP defines in .vcenter.dvs.portgroup.nsx_external.tier0_ips"
+              "description": "this will consume IP defines in .vcenter.vds.portgroup.nsx_external.tier0_ips"
             },
             {
               "edge_name": "edge-02",

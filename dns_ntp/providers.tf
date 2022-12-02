@@ -7,7 +7,7 @@ provider "vsphere" {
 
 provider "dns" {
   update {
-    server        = var.vcenter.dvs.portgroup.management.dns_ntp_ip
+    server        = var.vcenter.vds.portgroup.management.dns_ntp_ip
     key_name      = "${var.dns_ntp.bind.keyName}."
     key_algorithm = "hmac-md5"
     key_secret    = base64encode(var.bind_password)

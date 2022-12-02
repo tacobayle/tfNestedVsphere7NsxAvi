@@ -6,7 +6,7 @@ else
   echo "ERROR: no json file found"
   exit 1
 fi
-nsx_ip=$(jq -r .vcenter.dvs.portgroup.management.nsx_ip $jsonFile)
+nsx_ip=$(jq -r .vcenter.vds.portgroup.management.nsx_ip $jsonFile)
 vcenter_username=administrator
 vcenter_domain=$(jq -r .vcenter.sso.domain_name $jsonFile)
 vcenter_fqdn="$(jq -r .vcenter.name $jsonFile).$(jq -r .dns.domain $jsonFile)"

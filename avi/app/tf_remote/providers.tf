@@ -6,7 +6,7 @@ provider "vsphere" {
 }
 
 provider "nsxt" {
-  host                     = var.vcenter.dvs.portgroup.management.nsx_ip
+  host                     = var.vcenter.vds.portgroup.management.nsx_ip
   username                 = "admin"
   password                 = var.nsx_password
   allow_unverified_ssl     = true

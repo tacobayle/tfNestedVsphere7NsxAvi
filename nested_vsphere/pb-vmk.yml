@@ -11,9 +11,9 @@
         device: 'vmk1'
         current_switch_name: 'vSwitch1'
         current_portgroup_name: 'VMotion Network'
-        migrate_switch_name: "{{ vcenter.dvs.basename }}-1-VMotion"
-        migrate_portgroup_name: "{{ vcenter.dvs.portgroup.VMotion.name }}"
-      loop: "{{ vcenter.dvs.portgroup.management.esxi_ips }}"
+        migrate_switch_name: "{{ vcenter.vds.basename }}-1-VMotion"
+        migrate_portgroup_name: "{{ vcenter.vds.portgroup.VMotion.name }}"
+      loop: "{{ vcenter.vds.portgroup.management.esxi_ips }}"
       loop_control:
         index_var: my_idx
 
@@ -27,9 +27,9 @@
         device: 'vmk2'
         current_switch_name: 'vSwitch2'
         current_portgroup_name: 'VSAN Network'
-        migrate_switch_name: "{{ vcenter.dvs.basename }}-2-VSAN"
-        migrate_portgroup_name: "{{ vcenter.dvs.portgroup.VSAN.name }}"
-      loop: "{{ vcenter.dvs.portgroup.management.esxi_ips }}"
+        migrate_switch_name: "{{ vcenter.vds.basename }}-2-VSAN"
+        migrate_portgroup_name: "{{ vcenter.vds.portgroup.VSAN.name }}"
+      loop: "{{ vcenter.vds.portgroup.management.esxi_ips }}"
       loop_control:
         index_var: my_idx
 
@@ -41,15 +41,15 @@
         validate_certs: false
         device: vmk3
         esxi_hostname: "{{ esxi.basename }}{{ my_idx + 1 }}.{{ dns.domain }}"
-        dvswitch_name: "{{ vcenter.dvs.basename }}-0"
-        portgroup_name: "{{ vcenter.dvs.portgroup.management.name }}-vmk"
+        dvswitch_name: "{{ vcenter.vds.basename }}-0"
+        portgroup_name: "{{ vcenter.vds.portgroup.management.name }}-vmk"
         network:
           type: 'static'
           ip_address: "{{ item.1 }}"
-          subnet_mask: "{{ vcenter.dvs.portgroup.management.netmask }}"
+          subnet_mask: "{{ vcenter.vds.portgroup.management.netmask }}"
         state: present
         enable_mgmt: True
-      loop: "{{ vcenter.dvs.portgroup.management.esxi_ips | zip(vcenter.dvs.portgroup.management.esxi_ips_temp) | list }}"
+      loop: "{{ vcenter.vds.portgroup.management.esxi_ips | zip(vcenter.vds.portgroup.management.esxi_ips_temp) | list }}"
       loop_control:
         index_var: my_idx
 
@@ -61,12 +61,12 @@
         validate_certs: false
         device: vmk4
         esxi_hostname: "{{ esxi.basename }}{{ my_idx + 1 }}.{{ dns.domain }}"
-        dvswitch_name: "{{ vcenter.dvs.basename }}-0"
-        portgroup_name: "{{ vcenter.dvs.portgroup.management.name }}-vmk"
+        dvswitch_name: "{{ vcenter.vds.basename }}-0"
+        portgroup_name: "{{ vcenter.vds.portgroup.management.name }}-vmk"
         network:
           type: 'dhcp'
         state: present
         enable_mgmt: True
-      loop: "{{ vcenter.dvs.portgroup.management.esxi_ips }}"
+      loop: "{{ vcenter.vds.portgroup.management.esxi_ips }}"
       loop_control:
         index_var: my_idx

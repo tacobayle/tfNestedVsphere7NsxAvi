@@ -55,10 +55,10 @@ contents="$(jq '.new_vcsa.esxi.hostname = "'$(jq -r .esxi.basename $jsonFile)'1.
          .new_vcsa.appliance.thin_disk_mode = '$(jq -r .vcenter.thin_disk_mode $jsonFile)' |
          .new_vcsa.appliance.deployment_option = "'$(jq -r .vcenter.deployment_option $jsonFile)'" |
          .new_vcsa.appliance.name = "'$(jq -r .vcenter.name $jsonFile)'" |
-         .new_vcsa.network.ip = "'$(jq -r .vcenter.dvs.portgroup.management.vcenter_ip $jsonFile)'" |
+         .new_vcsa.network.ip = "'$(jq -r .vcenter.vds.portgroup.management.vcenter_ip $jsonFile)'" |
          .new_vcsa.network.dns_servers[0] = "'$(jq -r .dns.nameserver $jsonFile)'" |
-         .new_vcsa.network.prefix = "'$(jq -r .vcenter.dvs.portgroup.management.prefix $jsonFile)'" |
-         .new_vcsa.network.gateway = "'$(jq -r .vcenter.dvs.portgroup.management.gateway $jsonFile)'" |
+         .new_vcsa.network.prefix = "'$(jq -r .vcenter.vds.portgroup.management.prefix $jsonFile)'" |
+         .new_vcsa.network.gateway = "'$(jq -r .vcenter.vds.portgroup.management.gateway $jsonFile)'" |
          .new_vcsa.network.system_name = "'$(jq -r .vcenter.name $jsonFile)'.'$(jq -r .dns.domain $jsonFile)'" |
          .new_vcsa.os.password = "'$TF_VAR_vcenter_password'" |
          .new_vcsa.os.ntp_servers = "'$(jq -r .ntp.server $jsonFile)'" |
@@ -71,13 +71,13 @@ echo "${contents}" | tee vcenter_config.json
 echo ""
 echo "++++++++++++++++++++++++++++++++"
 echo "updating local /etc/hosts with vCenter and esxi0"
-contents=$(cat /etc/hosts | grep -v $(jq -r .vcenter.dvs.portgroup.management.vcenter_ip $jsonFile))
+contents=$(cat /etc/hosts | grep -v $(jq -r .vcenter.vds.portgroup.management.vcenter_ip $jsonFile))
 echo "${contents}" | sudo tee /etc/hosts
-contents="$(jq -r .vcenter.dvs.portgroup.management.vcenter_ip $jsonFile) $(jq -r .vcenter.name $jsonFile).$(jq -r .dns.domain $jsonFile)"
+contents="$(jq -r .vcenter.vds.portgroup.management.vcenter_ip $jsonFile) $(jq -r .vcenter.name $jsonFile).$(jq -r .dns.domain $jsonFile)"
 echo "${contents}" | sudo tee -a /etc/hosts
 IFS=$'\n'
 count=1
-for ip in $(cat $jsonFile | jq -c -r .vcenter.dvs.portgroup.management.esxi_ips[])
+for ip in $(cat $jsonFile | jq -c -r .vcenter.vds.portgroup.management.esxi_ips[])
 do
   contents=$(cat /etc/hosts | grep -v $ip)
   echo "${contents}" | sudo tee /etc/hosts

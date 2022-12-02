@@ -37,7 +37,7 @@ IFS=$'\n'
 load_govc_esxi
 echo ""
 echo "++++++++++++++++++++++++++++++++"
-for ip in $(cat $jsonFile | jq -c -r .vcenter.dvs.portgroup.management.esxi_ips[])
+for ip in $(cat $jsonFile | jq -c -r .vcenter.vds.portgroup.management.esxi_ips[])
 do
   export GOVC_URL=$ip
   echo "Deleting port group called VM Network for Host $ip"
@@ -59,7 +59,7 @@ echo "Enabling VSAN configuration"
 govc cluster.change -drs-enabled -ha-enabled -vsan-enabled -vsan-autoclaim "$(jq -r .vcenter.cluster $jsonFile)"
 IFS=$'\n'
 count=0
-for ip in $(jq -r .vcenter.dvs.portgroup.management.esxi_ips[] $jsonFile)
+for ip in $(jq -r .vcenter.vds.portgroup.management.esxi_ips[] $jsonFile)
 do
   load_govc_esxi
   if [[ $count -ne 0 ]] ; then
