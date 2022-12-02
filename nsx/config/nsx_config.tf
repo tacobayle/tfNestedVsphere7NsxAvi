@@ -65,28 +65,28 @@ resource "null_resource" "create_transport_node_profiles" {
 resource "null_resource" "create_host_transport_nodes" {
   depends_on = [null_resource.create_transport_node_profiles]
   provisioner "local-exec" {
-    command = "/bin/bash bash/host_transport_nodes.sh"
+    command = "/bin/bash bash/create_host_transport_nodes.sh"
   }
 }
 
 resource "null_resource" "create_edge_nodes" {
-  depends_on = [null_resource.create_host_transport_nodes]
+  depends_on = [null_resource.register_compute_manager]
   provisioner "local-exec" {
-    command = "/bin/bash bash/edges.sh"
+    command = "/bin/bash bash/create_edge_nodes.sh"
   }
 }
 
 resource "null_resource" "create_edge_clusters" {
   depends_on = [null_resource.create_edge_nodes]
   provisioner "local-exec" {
-    command = "/bin/bash bash/edge_clusters.sh"
+    command = "/bin/bash bash/create_edge_clusters.sh"
   }
 }
 
 resource "null_resource" "create_tier0s" {
   depends_on = [null_resource.create_edge_clusters]
   provisioner "local-exec" {
-    command = "/bin/bash bash/tier0s.sh"
+    command = "/bin/bash bash/create_tier0s.sh"
   }
 }
 
