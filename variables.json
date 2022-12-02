@@ -61,7 +61,7 @@
   "external_gw": {
     "create": true,
     "dns": ["10.23.108.1", "10.16.142.111"],
-    "name": "external-gw",
+    "name": "external-gw7",
     "cpu": 2,
     "memory": 4096,
     "disk": 20,
