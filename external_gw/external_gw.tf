@@ -17,17 +17,17 @@ data "template_file" "external_gw_userdata" {
   vars = {
     pubkey        = file(var.external_gw.public_key_path)
     username = var.external_gw.username
-    ipCidr  = "${var.vcenter.dvs.portgroup.management.external_gw_ip}/${var.vcenter.dvs.portgroup.management.prefix}"
-    ip = var.vcenter.dvs.portgroup.management.external_gw_ip
-    defaultGw = var.vcenter.dvs.portgroup.management.gateway
+    ipCidr  = "${var.vcenter.vds.portgroup.management.external_gw_ip}/${var.vcenter.vds.portgroup.management.prefix}"
+    ip = var.vcenter.vds.portgroup.management.external_gw_ip
+    defaultGw = var.vcenter.vds.portgroup.management.gateway
     password      = var.ubuntu_password
     hostname = var.external_gw.name
     ansible_version = var.external_gw.ansible_version
     avi_sdk_version = var.external_gw.avi_sdk_version
-    ip_vcenter = var.vcenter.dvs.portgroup.management.vcenter_ip
+    ip_vcenter = var.vcenter.vds.portgroup.management.vcenter_ip
     vcenter_name = var.vcenter.name
     dns_domain = var.dns.domain
-//    ip_data_cidr  = "${var.vcenter.dvs.portgroup.nsx_external.external_gw_ip}/${var.vcenter.dvs.portgroup.nsx_external.prefix}"
+//    ip_data_cidr  = "${var.vcenter.vds.portgroup.nsx_external.external_gw_ip}/${var.vcenter.vds.portgroup.nsx_external.prefix}"
     dns      = join(", ", var.external_gw.dns)
     netplanFile = var.external_gw.netplanFile
     privateKey = var.external_gw.private_key_path
@@ -76,7 +76,7 @@ resource "vsphere_virtual_machine" "external_gw" {
   }
 
   connection {
-    host        = var.vcenter.dvs.portgroup.management.external_gw_ip
+    host        = var.vcenter.vds.portgroup.management.external_gw_ip
     type        = "ssh"
     agent       = false
     user        = var.external_gw.username
@@ -92,7 +92,7 @@ resource "vsphere_virtual_machine" "external_gw" {
 
 resource "null_resource" "clear_ssh_key_external_gw_locally" {
   provisioner "local-exec" {
-    command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R \"${var.vcenter.dvs.portgroup.management.external_gw_ip}\" || true"
+    command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R \"${var.vcenter.vds.portgroup.management.external_gw_ip}\" || true"
   }
 }
 
@@ -149,7 +149,7 @@ resource "null_resource" "update_ip_external_gw_1" {
   count = (var.external_gw.create == true ? 1 : 0)
 
   connection {
-    host        = var.vcenter.dvs.portgroup.management.external_gw_ip
+    host        = var.vcenter.vds.portgroup.management.external_gw_ip
     type        = "ssh"
     agent       = false
     user        = var.external_gw.username
@@ -162,22 +162,22 @@ resource "null_resource" "update_ip_external_gw_1" {
       "mac=`ip -o link show | awk -F'link/ether ' '{print $2}' | awk -F' ' '{print $1}' | head -2 | tail -1`",
       "ifaceSecond=`ip -o link show | awk -F': ' '{print $2}' | head -3 | tail -1`",
       "macSecond=`ip -o link show | awk -F'link/ether ' '{print $2}' | awk -F' ' '{print $1}' | head -3 | tail -1`",
-      "sudo ip link set dev $ifaceThird mtu ${var.vcenter.dvs.portgroup.nsx_overlay.max_mtu}",
-      "sudo ip link set dev $ifaceLastName mtu ${var.vcenter.dvs.portgroup.nsx_overlay_edge.max_mtu}",
+      "sudo ip link set dev $ifaceThird mtu ${var.vcenter.vds.portgroup.nsx_overlay.max_mtu}",
+      "sudo ip link set dev $ifaceLastName mtu ${var.vcenter.vds.portgroup.nsx_overlay_edge.max_mtu}",
       "echo \"network:\" | sudo tee ${var.external_gw.netplanFile}",
       "echo \"    ethernets:\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"        $iface:\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            dhcp4: false\" | sudo tee -a ${var.external_gw.netplanFile}",
-      "echo \"            addresses: [${var.vcenter.dvs.portgroup.management.external_gw_ip}/${var.vcenter.dvs.portgroup.management.prefix}]\" | sudo tee -a ${var.external_gw.netplanFile}",
+      "echo \"            addresses: [${var.vcenter.vds.portgroup.management.external_gw_ip}/${var.vcenter.vds.portgroup.management.prefix}]\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            match:\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"                macaddress: $mac\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            set-name: $iface\" | sudo tee -a ${var.external_gw.netplanFile}",
-      "echo \"            gateway4: ${var.vcenter.dvs.portgroup.management.gateway}\" | sudo tee -a ${var.external_gw.netplanFile}",
+      "echo \"            gateway4: ${var.vcenter.vds.portgroup.management.gateway}\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            nameservers:\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"              addresses: [${join(", ", var.external_gw.dns)}]\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"        $ifaceSecond:\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            dhcp4: false\" | sudo tee -a ${var.external_gw.netplanFile}",
-      "echo \"            addresses: [${var.vcenter.dvs.portgroup.nsx_external.external_gw_ip}/${var.vcenter.dvs.portgroup.nsx_external.prefix}]\" | sudo tee -a ${var.external_gw.netplanFile}",
+      "echo \"            addresses: [${var.vcenter.vds.portgroup.nsx_external.external_gw_ip}/${var.vcenter.vds.portgroup.nsx_external.prefix}]\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            routes:\" | sudo tee -a ${var.external_gw.netplanFile}",
     ]
   }
@@ -192,7 +192,7 @@ resource "null_resource" "update_ip_external_gw_2" {
   count = var.external_gw.create == true ? length(var.external_gw.routes) : 0
 
   connection {
-    host        = var.vcenter.dvs.portgroup.management.external_gw_ip
+    host        = var.vcenter.vds.portgroup.management.external_gw_ip
     type        = "ssh"
     agent       = false
     user        = var.external_gw.username
@@ -214,7 +214,7 @@ resource "null_resource" "update_ip_external_gw_3" {
   count = (var.external_gw.create == true ? 1 : 0)
 
   connection {
-    host        = var.vcenter.dvs.portgroup.management.external_gw_ip
+    host        = var.vcenter.vds.portgroup.management.external_gw_ip
     type        = "ssh"
     agent       = false
     user        = var.external_gw.username
@@ -239,14 +239,14 @@ resource "null_resource" "update_ip_external_gw_3" {
       "echo \"            match:\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"                macaddress: $macThird\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            set-name: $ifaceThird\" | sudo tee -a ${var.external_gw.netplanFile}",
-      "echo \"            mtu: ${var.vcenter.dvs.portgroup.nsx_overlay.max_mtu}\" | sudo tee -a ${var.external_gw.netplanFile}",
+      "echo \"            mtu: ${var.vcenter.vds.portgroup.nsx_overlay.max_mtu}\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"        $ifaceLastName:\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            dhcp4: false\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            addresses: [${var.nsx.config.ip_pools[1].gateway}/${split("/", var.nsx.config.ip_pools[1].cidr)[1]}]\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            match:\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"                macaddress: $macLast\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"            set-name: $ifaceLastName\" | sudo tee -a ${var.external_gw.netplanFile}",
-      "echo \"            mtu: ${var.vcenter.dvs.portgroup.nsx_overlay_edge.max_mtu}\" | sudo tee -a ${var.external_gw.netplanFile}",
+      "echo \"            mtu: ${var.vcenter.vds.portgroup.nsx_overlay_edge.max_mtu}\" | sudo tee -a ${var.external_gw.netplanFile}",
       "echo \"    version: 2\" | sudo tee -a ${var.external_gw.netplanFile}",
       "sudo netplan apply",
       "sudo sysctl -w net.ipv4.ip_forward=1",

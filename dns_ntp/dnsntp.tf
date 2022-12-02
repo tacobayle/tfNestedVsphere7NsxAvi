@@ -17,10 +17,10 @@ data "template_file" "dns_ntp_userdata" {
   vars = {
     pubkey        = file(var.dns_ntp.public_key_path)
     username = var.dns_ntp.username
-    ipCidr  = "${var.vcenter.dvs.portgroup.management.dns_ntp_ip}/${var.vcenter.dvs.portgroup.management.prefix}"
-    ip = var.vcenter.dvs.portgroup.management.dns_ntp_ip
-    lastOctet = split(".", var.vcenter.dvs.portgroup.management.dns_ntp_ip)[3]
-    defaultGw = var.vcenter.dvs.portgroup.management.gateway
+    ipCidr  = "${var.vcenter.vds.portgroup.management.dns_ntp_ip}/${var.vcenter.vds.portgroup.management.prefix}"
+    ip = var.vcenter.vds.portgroup.management.dns_ntp_ip
+    lastOctet = split(".", var.vcenter.vds.portgroup.management.dns_ntp_ip)[3]
+    defaultGw = var.vcenter.vds.portgroup.management.gateway
     dns      = join(", ", var.dns_ntp.dns)
     netplanFile = var.dns_ntp.netplanFile
     privateKey = var.dns_ntp.private_key_path
@@ -72,7 +72,7 @@ resource "vsphere_virtual_machine" "dns_ntp" {
   }
 
   connection {
-    host        = var.vcenter.dvs.portgroup.management.dns_ntp_ip
+    host        = var.vcenter.vds.portgroup.management.dns_ntp_ip
     type        = "ssh"
     agent       = false
     user        = var.dns_ntp.username
@@ -88,6 +88,6 @@ resource "vsphere_virtual_machine" "dns_ntp" {
 
 resource "null_resource" "clear_ssh_key_dnsntp_locally" {
   provisioner "local-exec" {
-    command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R \"${var.vcenter.dvs.portgroup.management.dns_ntp_ip}\" || true"
+    command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R \"${var.vcenter.vds.portgroup.management.dns_ntp_ip}\" || true"
   }
 }

@@ -132,7 +132,7 @@ resource "vsphere_virtual_machine" "nsx_medium" {
       nsx_hostname = "${var.nsx.manager.basename}-${count.index}"
       nsx_ip_0 = var.vcenter.vds.portgroup.management.nsx_ip
       nsx_isSSHEnabled = "True"
-      nsx_netmask_0 = var.vcenter.dvs.portgroup.management.netmask
+      nsx_netmask_0 = var.vcenter.vds.portgroup.management.netmask
       nsx_ntp_0 = var.ntp.server
       nsx_passwd_0 = var.nsx_password
       nsx_role = var.nsx.manager.role
@@ -172,11 +172,11 @@ resource "vsphere_virtual_machine" "nsx_large" {
       nsx_cli_audit_passwd_0 = var.nsx_password
       nsx_cli_passwd_0 = var.nsx_password
       nsx_dns1_0 = var.dns.nameserver
-      nsx_gateway_0 = var.vcenter.dvs.portgroup.management.gateway
+      nsx_gateway_0 = var.vcenter.vds.portgroup.management.gateway
       nsx_hostname = "${var.nsx.manager.basename}-${count.index}"
-      nsx_ip_0 = var.vcenter.dvs.portgroup.management.nsx_ip
+      nsx_ip_0 = var.vcenter.vds.portgroup.management.nsx_ip
       nsx_isSSHEnabled = "True"
-      nsx_netmask_0 = var.vcenter.dvs.portgroup.management.netmask
+      nsx_netmask_0 = var.vcenter.vds.portgroup.management.netmask
       nsx_ntp_0 = var.ntp.server
       nsx_passwd_0 = var.nsx_password
       nsx_role = var.nsx.manager.role
@@ -189,6 +189,6 @@ resource "null_resource" "wait_nsx" {
   depends_on = [vsphere_virtual_machine.nsx_extra_small, vsphere_virtual_machine.nsx_small, vsphere_virtual_machine.nsx_medium, vsphere_virtual_machine.nsx_large]
 
   provisioner "local-exec" {
-    command = "count=1 ; until $(curl --output /dev/null --silent --head -k https://${var.vcenter.dvs.portgroup.management.nsx_ip}); do echo \"Attempt $count: Waiting for NSX Manager to be reachable...\"; sleep 30 ; count=$((count+1)) ;  if [ \"$count\" = 60 ]; then echo \"ERROR: Unable to connect to NSX Manager\" ; exit 1 ; fi ; done"
+    command = "count=1 ; until $(curl --output /dev/null --silent --head -k https://${var.vcenter.vds.portgroup.management.nsx_ip}); do echo \"Attempt $count: Waiting for NSX Manager to be reachable...\"; sleep 30 ; count=$((count+1)) ;  if [ \"$count\" = 60 ]; then echo \"ERROR: Unable to connect to NSX Manager\" ; exit 1 ; fi ; done"
   }
 }

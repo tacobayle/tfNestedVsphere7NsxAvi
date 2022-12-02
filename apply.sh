@@ -21,7 +21,7 @@ fi
 #
 # check if the amount of external IP is enough for all the interfaces of the tier0
 IFS=$'\n'
-ip_count_external_tier0=$(jq -c -r '.vcenter.dvs.portgroup.nsx_external.tier0_ips | length' $jsonFile)
+ip_count_external_tier0=$(jq -c -r '.vcenter.vds.portgroup.nsx_external.tier0_ips | length' $jsonFile)
 tier0_ifaces=0
 for tier0 in $(jq -c -r .nsx.config.tier0s[] $jsonFile)
 do
@@ -29,7 +29,7 @@ do
   tier0_ifaces=$((tier0_ifaces+$(echo $tier0 | jq -c -r '.interfaces | length')))
 done
 if [[ $tier0_ifaces -gt $ip_count_external_tier0 ]] ; then
-  echo "Amount of IPs (.vcenter.dvs.portgroup.nsx_external.tier0_ips) cannot cover the amount of tier0 interfaces defined in .nsx.config.tier0s[].interfaces"
+  echo "Amount of IPs (.vcenter.vds.portgroup.nsx_external.tier0_ips) cannot cover the amount of tier0 interfaces defined in .nsx.config.tier0s[].interfaces"
   exit 255
 fi
 # check if the amount of interfaces in vip config is equal to two for each tier0
@@ -44,7 +44,7 @@ do
   done
 done
 # check if the amount of external vip is enough for all the vips of the tier0s
-vip_count_external_tier0=$(jq -c -r '.vcenter.dvs.portgroup.nsx_external.tier0_vips | length' $jsonFile)
+vip_count_external_tier0=$(jq -c -r '.vcenter.vds.portgroup.nsx_external.tier0_vips | length' $jsonFile)
 tier0_vips=0
 for tier0 in $(jq -c -r .nsx.config.tier0s[] $jsonFile)
 do
@@ -53,7 +53,7 @@ do
     tier0_vips=$((tier0_vips+$(echo $tier0 | jq -c -r '.ha_vips | length')))
   done
 if [[ $tier0_vips -gt $vip_count_external_tier0 ]] ; then
-  echo "Amount of VIPs (.vcenter.dvs.portgroup.nsx_external.tier0_vips) cannot cover the amount of ha_vips defined in .nsx.config.tier0s[].ha_vips"
+  echo "Amount of VIPs (.vcenter.vds.portgroup.nsx_external.tier0_vips) cannot cover the amount of ha_vips defined in .nsx.config.tier0s[].ha_vips"
   exit 255
 fi
 done
@@ -147,7 +147,7 @@ if [[ $(jq -c -r .avi.controller.create $jsonFile) == true ]] || [[ $(jq -c -r .
   #
 #  for route in $(jq -c -r .external_gw.routes[] $jsonFile)
 #  do
-#    sudo ip route add $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.dvs.portgroup.management.external_gw_ip $jsonFile)
+#    sudo ip route add $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.vds.portgroup.management.external_gw_ip $jsonFile)
 #  done
   tf_init_apply "Build of Nested Avi Controllers - This should take around 15 minutes" avi/controllers ../../logs/tf_avi_controller.stdout ../../logs/tf_avi_controller.errors ../../$jsonFile
   #
@@ -155,7 +155,7 @@ if [[ $(jq -c -r .avi.controller.create $jsonFile) == true ]] || [[ $(jq -c -r .
   #
 #  for route in $(jq -c -r .external_gw.routes[] $jsonFile)
 #  do
-#    sudo ip route del $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.dvs.portgroup.management.external_gw_ip $jsonFile)
+#    sudo ip route del $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.vds.portgroup.management.external_gw_ip $jsonFile)
 #  done
 fi
 #
@@ -167,7 +167,7 @@ if [[ $(jq -c -r .avi.app.create $jsonFile) == true ]] ; then
   #
 #  for route in $(jq -c -r .external_gw.routes[] $jsonFile)
 #  do
-#    sudo ip route add $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.dvs.portgroup.management.external_gw_ip $jsonFile)
+#    sudo ip route add $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.vds.portgroup.management.external_gw_ip $jsonFile)
 #  done
   tf_init_apply "Build of Nested Avi App - This should take less than 10 minutes" avi/app ../../logs/tf_avi_app.stdout ../../logs/tfavi_app.errors ../../$jsonFile
   #
@@ -175,7 +175,7 @@ if [[ $(jq -c -r .avi.app.create $jsonFile) == true ]] ; then
   #
 #  for route in $(jq -c -r .external_gw.routes[] $jsonFile)
 #  do
-#    sudo ip route del $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.dvs.portgroup.management.external_gw_ip $jsonFile)
+#    sudo ip route del $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.vds.portgroup.management.external_gw_ip $jsonFile)
 #  done
 fi
 #
@@ -192,5 +192,5 @@ echo "Configure your local DNS by using $(jq -c -r .dns.nameserver $jsonFile)"
 echo "vCenter url: https://$(jq -c -r .vcenter.name $jsonFile).$(jq -c -r .dns.domain $jsonFile)"
 echo "NSX url: https://$(jq -c -r .nsx.manager.basename $jsonFile).$(jq -c -r .dns.domain $jsonFile)"
 echo "To access Avi UI:"
-echo "  - configure $(jq -c -r .vcenter.dvs.portgroup.management.external_gw_ip $jsonFile) as a socks proxy"
+echo "  - configure $(jq -c -r .vcenter.vds.portgroup.management.external_gw_ip $jsonFile) as a socks proxy"
 echo "  - Avi url: https://$(jq -c -r .nsx.config.segments_overlay[0].cidr $jsonFile | cut -d'/' -f1 | cut -d'.' -f1-3).$(jq -c -r .nsx.config.segments_overlay[0].avi_controller $jsonFile)"

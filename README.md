@@ -136,32 +136,32 @@ On the top of an underlay/outer vCenter environment, this repo will create the f
 The following variables need to be configured:
 
 - For the management network (which needs to reach the Internet):
-  - vcenter.dvs.portgroup.management.netmask like "255.255.252.0"
-  - vcenter.dvs.portgroup.management.prefix like "22"
-  - vcenter.dvs.portgroup.management.gateway like "10.41.132.1"
+  - vcenter.vds.portgroup.management.netmask like "255.255.252.0"
+  - vcenter.vds.portgroup.management.prefix like "22"
+  - vcenter.vds.portgroup.management.gateway like "10.41.132.1"
 - For the VMotion network:
-  - vcenter.dvs.portgroup.VMotion.netmask like "255.255.255.0"
-  - vcenter.dvs.portgroup.VMotion.prefix like "24"
+  - vcenter.vds.portgroup.VMotion.netmask like "255.255.255.0"
+  - vcenter.vds.portgroup.VMotion.prefix like "24"
 - For the vSAN network:
-  - vcenter.dvs.portgroup.VSAN.netmask like "255.255.255.0"
-  - vcenter.dvs.portgroup.VSAN.prefix like "24"
+  - vcenter.vds.portgroup.VSAN.netmask like "255.255.255.0"
+  - vcenter.vds.portgroup.VSAN.prefix like "24"
 
 ### VM(s) IPs
 
 - For the management network, static IPs are configured as followed:
-    - the ESXi VMs IPs are defined in vcenter.dvs.portgroup.management.esxi_ips[]
-    - the ESXi VMs temporary IPs are defined in vcenter.dvs.portgroup.management.esxi_ips_temp - these IPs are released once the infra is ready
-    - the dns_vm VM IP is defined in vcenter.dvs.portgroup.management.dns_ntp_ip
-    - the external-gw VM IP is defined in vcenter.dvs.portgroup.management.external_gw_ip
+    - the ESXi VMs IPs are defined in vcenter.vds.portgroup.management.esxi_ips[]
+    - the ESXi VMs temporary IPs are defined in vcenter.vds.portgroup.management.esxi_ips_temp - these IPs are released once the infra is ready
+    - the dns_vm VM IP is defined in vcenter.vds.portgroup.management.dns_ntp_ip
+    - the external-gw VM IP is defined in vcenter.vds.portgroup.management.external_gw_ip
 
 - For the Vmotion network, static IPs are configured as followed:
-    - the ESXi VMs IP are defined in vcenter.dvs.portgroup.VMotion.esxi_ips[]
+    - the ESXi VMs IP are defined in vcenter.vds.portgroup.VMotion.esxi_ips[]
 
 - For the vSAN network, static IPs are configured as followed:
-    - the ESXi VMs IP are defined in vcenter.dvs.portgroup.VSAN.esxi_ips[]
+    - the ESXi VMs IP are defined in vcenter.vds.portgroup.VSAN.esxi_ips[]
 
 - For the NSX external network, static IPs are configured as followed:
-    - the external-gw VM IP is defined in vcenter.dvs.portgroup.nsx_external.external_gw_ip
+    - the external-gw VM IP is defined in vcenter.vds.portgroup.nsx_external.external_gw_ip
 
 - For the NSX overlay network, static IPs are configured as followed:
     - the external-gw VM IP is defined in nsx.config.ip_pools[0].gateway
@@ -197,7 +197,7 @@ The following variables need to be configured:
 
 
 It will deploy a single vCenter on the top of the management port group (connected to the management network of the underlay infrastructure).
-IP is defined in vcenter.dvs.portgroup.management.vcenter_ip.
+IP is defined in vcenter.vds.portgroup.management.vcenter_ip.
 
 Here is below the nested infrastructure created:
 
@@ -216,7 +216,7 @@ Here is below the nested infrastructure created:
 ### NSX Manager deployment
 
 It will deploy a single NSX Manager on the top of the management PG (connected to the management network of the underlay infrastructure).
-IP is defined in vcenter.dvs.portgroup.management.nsx_ip.
+IP is defined in vcenter.vds.portgroup.management.nsx_ip.
 
 ### NSX configuration:
 - NSX license

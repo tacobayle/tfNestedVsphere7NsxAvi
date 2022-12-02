@@ -85,18 +85,18 @@ done
 load_govc_env
 govc dvs.create -mtu $(jq -r .vcenter.vds.mtu $jsonFile) -discovery-protocol $(jq -r .vcenter.vds.discovery_protocol $jsonFile) -product-version=$(jq -r .vcenter.vds.version $jsonFile) "$(jq -r .vcenter.vds.basename $jsonFile)-0"
 govc dvs.create -mtu $(jq -r .vcenter.vds.mtu $jsonFile) -discovery-protocol $(jq -r .vcenter.vds.discovery_protocol $jsonFile) -product-version=$(jq -r .vcenter.vds.version $jsonFile) "$(jq -r .vcenter.vds.basename $jsonFile)-1-VMotion"
-govc dvs.create -mtu $(jq -r .vcenter.dvs.mtu $jsonFile) -discovery-protocol $(jq -r .vcenter.dvs.discovery_protocol $jsonFile) -product-version=$(jq -r .vcenter.dvs.version $jsonFile) "$(jq -r .vcenter.dvs.basename $jsonFile)-2-VSAN"
-govc dvs.portgroup.add -dvs "$(jq -r .vcenter.dvs.basename $jsonFile)-0" -vlan 0 "$(jq -r .vcenter.dvs.portgroup.management.name $jsonFile)"
-govc dvs.portgroup.add -dvs "$(jq -r .vcenter.dvs.basename $jsonFile)-0" -vlan 0 "$(jq -r .vcenter.dvs.portgroup.management.name $jsonFile)-vmk"
-govc dvs.portgroup.add -dvs "$(jq -r .vcenter.dvs.basename $jsonFile)-1-VMotion" -vlan 0 "$(jq -r .vcenter.dvs.portgroup.VMotion.name $jsonFile)"
-govc dvs.portgroup.add -dvs "$(jq -r .vcenter.dvs.basename $jsonFile)-2-VSAN" -vlan 0 "$(jq -r .vcenter.dvs.portgroup.VSAN.name $jsonFile)"
+govc dvs.create -mtu $(jq -r .vcenter.vds.mtu $jsonFile) -discovery-protocol $(jq -r .vcenter.vds.discovery_protocol $jsonFile) -product-version=$(jq -r .vcenter.vds.version $jsonFile) "$(jq -r .vcenter.vds.basename $jsonFile)-2-VSAN"
+govc dvs.portgroup.add -dvs "$(jq -r .vcenter.vds.basename $jsonFile)-0" -vlan 0 "$(jq -r .vcenter.vds.portgroup.management.name $jsonFile)"
+govc dvs.portgroup.add -dvs "$(jq -r .vcenter.vds.basename $jsonFile)-0" -vlan 0 "$(jq -r .vcenter.vds.portgroup.management.name $jsonFile)-vmk"
+govc dvs.portgroup.add -dvs "$(jq -r .vcenter.vds.basename $jsonFile)-1-VMotion" -vlan 0 "$(jq -r .vcenter.vds.portgroup.VMotion.name $jsonFile)"
+govc dvs.portgroup.add -dvs "$(jq -r .vcenter.vds.basename $jsonFile)-2-VSAN" -vlan 0 "$(jq -r .vcenter.vds.portgroup.VSAN.name $jsonFile)"
 IFS=$'\n'
 count=1
-for ip in $(jq -r .vcenter.dvs.portgroup.management.esxi_ips[] $jsonFile)
+for ip in $(jq -r .vcenter.vds.portgroup.management.esxi_ips[] $jsonFile)
 do
-  govc dvs.add -dvs "$(jq -r .vcenter.dvs.basename $jsonFile)-0" -pnic=vmnic0 "$(jq -r .esxi.basename $jsonFile)$count.$(jq -r .dns.domain $jsonFile)"
-  govc dvs.add -dvs "$(jq -r .vcenter.dvs.basename $jsonFile)-1-VMotion" -pnic=vmnic1 "$(jq -r .esxi.basename $jsonFile)$count.$(jq -r .dns.domain $jsonFile)"
-  govc dvs.add -dvs "$(jq -r .vcenter.dvs.basename $jsonFile)-2-VSAN" -pnic=vmnic2 "$(jq -r .esxi.basename $jsonFile)$count.$(jq -r .dns.domain $jsonFile)"
+  govc dvs.add -dvs "$(jq -r .vcenter.vds.basename $jsonFile)-0" -pnic=vmnic0 "$(jq -r .esxi.basename $jsonFile)$count.$(jq -r .dns.domain $jsonFile)"
+  govc dvs.add -dvs "$(jq -r .vcenter.vds.basename $jsonFile)-1-VMotion" -pnic=vmnic1 "$(jq -r .esxi.basename $jsonFile)$count.$(jq -r .dns.domain $jsonFile)"
+  govc dvs.add -dvs "$(jq -r .vcenter.vds.basename $jsonFile)-2-VSAN" -pnic=vmnic2 "$(jq -r .esxi.basename $jsonFile)$count.$(jq -r .dns.domain $jsonFile)"
   count=$((count+1))
 done
 #
@@ -106,7 +106,7 @@ sleep 5
 echo "++++++++++++++++++++++++++++++++"
 echo "Update vCenter Appliance port group location"
 load_govc_env
-govc vm.network.change -vm $(jq -r .vcenter.name $jsonFile) -net $(jq -r .vcenter.dvs.portgroup.management.name $jsonFile) ethernet-0 &
+govc vm.network.change -vm $(jq -r .vcenter.name $jsonFile) -net $(jq -r .vcenter.vds.portgroup.management.name $jsonFile) ethernet-0 &
 govc_pid=$(echo $!)
 echo "Waiting 5 secs to check if vCenter VM is UP"
 sleep 10

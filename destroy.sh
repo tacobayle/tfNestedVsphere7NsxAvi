@@ -16,7 +16,7 @@ echo "--------------------------------------------------------------------------
 #
 #for route in $(jq -c -r .external_gw.routes[] $jsonFile)
 #do
-#  sudo ip route del $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.dvs.portgroup.management.external_gw_ip $jsonFile)
+#  sudo ip route del $(echo $route | jq -c -r '.to') via $(jq -c -r .vcenter.vds.portgroup.management.external_gw_ip $jsonFile)
 #done
 #echo "--------------------------------------------------------------------------------------------------------------------"
 #
