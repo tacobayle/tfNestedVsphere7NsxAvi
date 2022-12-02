@@ -131,8 +131,8 @@
       "domain_name": "domain.local"
     },
     "ceip_enabled": false,
-    "dvs" : {
-      "basename": "dvs",
+    "vds" : {
+      "basename": "vds",
       "mtu": 1500,
       "discovery_protocol": "lldp",
       "version": "7.0.2",
