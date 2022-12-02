@@ -1,4 +1,4 @@
-# tfNestedEsxiVcenterMultipleVdsNsxAvi
+# tfNestedVsphere7NsxAvi
 
 ## Goal
 
@@ -305,8 +305,8 @@ A nsx group is configured based on this VM tag:
 ## start the script (create the infra)
 
 ```shell
-git clone https://github.com/tacobayle/tfNestedEsxiVcenterMultipleVdsNsxAvi ; cd tfNestedEsxiVcenterMultipleVdsNsxAvi ; /bin/bash apply.sh
-Cloning into 'tfNestedEsxiVcenterMultipleVdsNsxAvi'...
+git clone https://github.com/tacobayle/tfNestedVsphere7NsxAvi ; cd tfNestedVsphere7NsxAvi ; /bin/bash apply.sh
+Cloning into 'tfNestedVsphere7NsxAvi'...
 remote: Enumerating objects: 293, done.
 remote: Counting objects: 100% (293/293), done.
 remote: Compressing objects: 100% (195/195), done.
