@@ -195,7 +195,7 @@ echo "  - url: https://$(jq -c -r .vcenter.name $jsonFile).$(jq -c -r .dns.domai
 echo "  - username: administrator@$(jq -r .vcenter.sso.domain_name $jsonFile)" | tee -a output.txt
 echo "  - password: $TF_VAR_vcenter_password" | tee -a output.txt
 echo "To Access NSX Manager" | tee -a output.txt
-echo "NSX url: https://$(jq -c -r .nsx.manager.basename $jsonFile).$(jq -c -r .dns.domain $jsonFile)- IP: $(jq -c -r .vcenter.vds.portgroup.management.nsx_ip $jsonFile)" | tee -a output.txt
+echo "  - url: https://$(jq -c -r .nsx.manager.basename $jsonFile).$(jq -c -r .dns.domain $jsonFile)- IP: $(jq -c -r .vcenter.vds.portgroup.management.nsx_ip $jsonFile)" | tee -a output.txt
 echo "  - username: admin" | tee -a output.txt
 echo "  - password: $TF_VAR_nsx_password" | tee -a output.txt
 echo "To access Avi UI:" | tee -a output.txt
