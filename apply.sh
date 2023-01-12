@@ -187,10 +187,20 @@ fi
 #
 # Output message
 #
-echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
-echo "Configure your local DNS by using $(jq -c -r .dns.nameserver $jsonFile)"
-echo "vCenter url: https://$(jq -c -r .vcenter.name $jsonFile).$(jq -c -r .dns.domain $jsonFile)"
-echo "NSX url: https://$(jq -c -r .nsx.manager.basename $jsonFile).$(jq -c -r .dns.domain $jsonFile)"
-echo "To access Avi UI:"
-echo "  - configure $(jq -c -r .vcenter.vds.portgroup.management.external_gw_ip $jsonFile) as a socks proxy"
-echo "  - Avi url: https://$(jq -c -r .nsx.config.segments_overlay[0].cidr $jsonFile | cut -d'/' -f1 | cut -d'.' -f1-3).$(jq -c -r .nsx.config.segments_overlay[0].avi_controller $jsonFile)"
+rm -f output.txt
+echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++" | tee output.txt
+echo "Configure your local DNS by using $(jq -c -r .dns.nameserver $jsonFile)" | tee -a output.txt
+echo "To Access vCenter" | tee -a output.txt
+echo "  - url: https://$(jq -c -r .vcenter.name $jsonFile).$(jq -c -r .dns.domain $jsonFile) - IP: $(jq -c -r .vcenter.vds.portgroup.management.vcenter_ip $jsonFile)" | tee -a output.txt
+echo "  - username: administrator@$(jq -r .vcenter.sso.domain_name $jsonFile)" | tee -a output.txt
+echo "  - password: $TF_VAR_vcenter_password" | tee -a output.txt
+echo "To Access NSX Manager" | tee -a output.txt
+echo "NSX url: https://$(jq -c -r .nsx.manager.basename $jsonFile).$(jq -c -r .dns.domain $jsonFile)- IP: $(jq -c -r .vcenter.vds.portgroup.management.nsx_ip $jsonFile)" | tee -a output.txt
+echo "  - username: admin" | tee -a output.txt
+echo "  - password: $TF_VAR_nsx_password" | tee -a output.txt
+echo "To access Avi UI:" | tee -a output.txt
+echo "  - ssh $(jq -c -r .vcenter.vds.portgroup.management.external_gw_ip $jsonFile) with port forwarding" | tee -a output.txt
+echo "  - configure a socks proxy in your browser with 127.0.0.1 along with the port that your forward to the remote ssh configured in the previous step" | tee -a output.txt
+echo "  - Avi url: https://$(jq -c -r .nsx.config.segments_overlay[0].cidr $jsonFile | cut -d'/' -f1 | cut -d'.' -f1-3).$(jq -c -r .nsx.config.segments_overlay[0].avi_controller $jsonFile)" | tee -a output.txt
+echo "  - username: admin" | tee -a output.txt
+echo "  - password: $TF_VAR_avi_password" | tee -a output.txt
