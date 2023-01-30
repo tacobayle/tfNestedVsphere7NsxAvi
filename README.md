@@ -182,7 +182,7 @@ The following variables need to be configured:
 ### Files required to build the nested VM(s)
 
 - vCenter:
-  - "VMware-VCSA-all-7.0.3-20395099.iso" defined in "vcenter.iso_source_location"
+  - "VMware-VCSA-all-7.0.3-20990077.iso" defined in "vcenter.iso_source_location"
 - NSX Manager:
   - "nsx-unified-appliance-3.2.1.0.0.19801963.ova" defined in "nsx.content_library.ova_location"
 - Avi Controller:

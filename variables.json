@@ -117,7 +117,7 @@
     "nested_hv_enabled": "true"
   },
   "vcenter": {
-    "iso_source_location": "/home/ubuntu/bin/VMware-VCSA-all-7.0.3-20395099.iso",
+    "iso_source_location": "/home/ubuntu/bin/VMware-VCSA-all-7.0.3-20990077.iso",
     "json_config_file": "vcsa-cli-installer/templates/install/vCSA_with_cluster_on_ESXi.json",
     "datacenter": "dc1",
     "cluster": "cluster1",
