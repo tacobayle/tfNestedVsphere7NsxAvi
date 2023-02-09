@@ -5,7 +5,7 @@
     - vmware.ansible_for_nsxt
 
 # ansible-galaxy collection install git+https://github.com/vmware/ansible-for-nsxt.git,master
-# pip3 instal pyvmomi
+# pip3 install pyvmomi
 
   tasks:
 

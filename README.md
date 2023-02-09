@@ -101,6 +101,7 @@ ansible [core 2.11.12]
 ```
 ansible-galaxy collection list | grep nsx
 vmware.ansible_for_nsxt 1.0.0
+# ansible-galaxy collection install git+https://github.com/vmware/ansible-for-nsxt.git,master
 ```
 
 ```

@@ -1,1 +1,3 @@
 cd ~/tfNestedVsphere7NsxAvi ; /bin/bash destroy.sh ; cd ~ ; rm -fr tfNestedVsphere7NsxAvi ; git clone https://github.com/tacobayle/tfNestedVsphere7NsxAvi ; cd tfNestedVsphere7NsxAvi ; /bin/bash apply.sh
+
+# cd ~/tfNestedVsphere7NsxAvi ; /bin/bash destroy.sh ; cd ~ ; rm -fr tfNestedVsphere7NsxAvi ; git clone https://github.com/tacobayle/tfNestedVsphere7NsxAvi ; cd tfNestedVsphere7NsxAvi ; cp variables.remo.json variables.json ; /bin/bash apply.sh
