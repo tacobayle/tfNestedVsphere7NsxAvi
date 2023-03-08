@@ -61,7 +61,7 @@ contents="$(jq '.new_vcsa.esxi.hostname = "'$(jq -r .esxi.basename $jsonFile)'1.
          .new_vcsa.network.gateway = "'$(jq -r .vcenter.vds.portgroup.management.gateway $jsonFile)'" |
          .new_vcsa.network.system_name = "'$(jq -r .vcenter.name $jsonFile)'.'$(jq -r .dns.domain $jsonFile)'" |
          .new_vcsa.os.password = "'$TF_VAR_vcenter_password'" |
-         .new_vcsa.os.ntp_servers = "'$(jq -r .ntp.server $jsonFile)'" |
+         .new_vcsa.os.ntp_servers = "'$(jq -r .dns.nameserver $jsonFile)'" |
          .new_vcsa.os.ssh_enable = '$(jq -r .vcenter.ssh_enable $jsonFile)' |
          .new_vcsa.sso.password = "'$TF_VAR_vcenter_password'" |
          .new_vcsa.sso.domain_name = "'$(jq -r .vcenter.sso.domain_name $jsonFile)'" |
